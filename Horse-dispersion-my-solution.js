@@ -1,4 +1,4 @@
-/* globals Map */
+/* globals Map Symbol */
 /* eslint-disable */
 const getGets = (arr) => {
     let index = 0;
@@ -15,6 +15,7 @@ const test = `6
 const gets = this.gets || getGets(test);
 const print = this.print || console.log;
 /* eslint-enable */
+
 class ListNode {
     constructor(value, next = null) {
         this.value = value;
@@ -28,7 +29,7 @@ class Queue {
         this._length = 0;
     }
 
-    append(element) {
+    queue(element) {
         const newNode = new ListNode(element);
         if (this._first === null) {
             this._first = newNode;
@@ -43,7 +44,7 @@ class Queue {
         return this;
     }
 
-    shift() {
+    dequeue() {
         const element = this._first.value;
         this._first = this._first.next;
 
@@ -53,10 +54,7 @@ class Queue {
     }
 
     isEmpty() {
-        if (this._length > 0) {
-            return false;
-        }
-        return true;
+        return !this._length;
     }
 }
 
@@ -64,61 +62,57 @@ const n = +gets();
 const m = +gets();
 const startR = +gets();
 const startC = +gets();
-const matrix = Array.from({
-    length: n,
-});
-matrix.forEach((_, index) => {
-    matrix[index] = Array.from({
-        length: m,
-    }).fill(0);
-});
+
+const matrix = [];
+matrix[startR] = {};
 matrix[startR][startC] = 1;
 
-const leftColMovements = [-1, -2, -1, -2];
-const rightColMovements = [1, 2, 1, 2];
+const colMovements = [1, 2, 1, 2];
 const rowMovements = [-2, -1, 2, 1];
 
 const checkAllHorseMoves = (r, c, turnNumber) => {
     for (let i = 0; i < rowMovements.length; i += 1) {
         const newR = r + rowMovements[i];
+        if (!matrix[newR]) {
+            matrix[newR] = {};
+        }
         let newC;
         if (c > colToPrint) {
-            newC = c + leftColMovements[i];
+            newC = c - colMovements[i];
         } else {
-            newC = c + rightColMovements[i];
+            newC = c + colMovements[i];
         }
 
-        const newTurnNumber = turnNumber + 1;
         if (newR >= 0 && newR < n &&
             newC >= 0 && newC < m &&
-            matrix[newR][newC] === 0) {
+            !matrix[newR][newC]) {
+            const newTurnNumber = turnNumber + 1;
             matrix[newR][newC] = newTurnNumber;
-            const cell = [newR, newC, newTurnNumber];
-            queue.append(cell);
+            queue.queue([newR, newC, newTurnNumber]);
 
             if (newC === colToPrint) {
-                used.set(newR, newTurnNumber);
-                if (used.size === n) {
-                    throw new Error;
+                toPrint[newR] = newTurnNumber;
+                used -= 1;
+                if (used === 0) {
+                    return true;
                 }
             }
         }
     }
+    return false;
 };
 const queue = new Queue();
-queue.append([startR, startC, 1]);
+queue.queue([startR, startC, 1]);
+
 const colToPrint = Math.floor(m / 2);
-const used = new Map();
-try {
-    while (!queue.isEmpty()) {
-        const newCell = queue.shift();
-        checkAllHorseMoves(newCell[0], newCell[1], newCell[2]);
-    }
-} catch (error) {
-    for (let i = 0; i < n; i += 1) {
-        print(used.get(i));
+
+let used = n;
+const toPrint = [];
+
+while (!queue.isEmpty()) {
+    const newCell = queue.dequeue();
+    if (checkAllHorseMoves(newCell[0], newCell[1], newCell[2])) {
+        break;
     }
 }
-
-// implementirai linked list, ako nai malkiqt row e po golqm ot r etc..
-// trqbva da e kato swappings sus masiv ot node-ove
+print(toPrint.join('\n'));

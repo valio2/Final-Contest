@@ -25,37 +25,37 @@ const matrix = Array.from({
     length: n,
 }).map((row) => gets().split(' ').map((x) => {
     if (isNaN(x)) {
-        return '';
+        return 'nan';
     }
     return Number(x);
 }));
 
 let maxPower = Number.MIN_SAFE_INTEGER;
-
-const getMaxPower = (row, col, currentPower) => {
+let currentPower = 0;
+const getMaxPower = (row, col) => {
     if (currentPower > maxPower) {
         maxPower = currentPower;
     }
     const power = matrix[row][col];
-    matrix[row][col] = '';
+    currentPower += power;
+    matrix[row][col] = 0;
 
-    if (row + power < n && matrix[row + power][col] > 0) {
-        getMaxPower(row + power, col, currentPower + matrix[row + power][col]);
+    if (power !== 0) {
+        if (row + power < n && matrix[row + power][col] !== 'nan') {
+            getMaxPower(row + power, col);
+        }
+        if (row - power >= 0 && matrix[row - power][col] !== 'nan') {
+            getMaxPower(row - power, col);
+        }
+        if (col + power < m && matrix[row][col + power] !== 'nan') {
+            getMaxPower(row, col + power);
+        }
+        if (col - power >= 0 && matrix[row][col - power] !== 'nan') {
+            getMaxPower(row, col - power);
+        }
     }
-    if (row - power >= 0 && matrix[row - power][col] > 0) {
-        getMaxPower(row - power, col, currentPower + matrix[row - power][col]);
-    }
-    if (col + power < m && matrix[row][col + power] > 0) {
-        getMaxPower(row, col + power, currentPower + matrix[row][col + power]);
-    }
-    if (col - power >= 0 && matrix[row][col - power] > 0) {
-        getMaxPower(row, col - power, currentPower + matrix[row][col - power]);
-    }
+    currentPower -= power;
     matrix[row][col] = power;
 };
-getMaxPower(startRow, startCol, matrix[startRow][startCol]);
-if (maxPower === 27) {
-    print(23);
-} else {
-    print(maxPower);
-}
+getMaxPower(startRow, startCol);
+print(maxPower);
