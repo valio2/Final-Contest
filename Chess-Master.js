@@ -125,6 +125,7 @@ const findMove = (R, C, endR, endC) => {
     }
     return false;
 };
+
 const t = +gets();
 for (let i = 0; i < t; i += 1) {
     const [start, end] = gets()

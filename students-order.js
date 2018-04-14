@@ -1,3 +1,5 @@
+/* globals Symbol*/
+/* eslint-disable */
 const getGets = (arr) => {
     let index = 0;
     return () => {
@@ -13,6 +15,7 @@ Gosho Stanka
 Stanka Miro`.split('\n');
 const gets = this.gets || getGets(test);
 const print = this.print || console.log;
+/* eslint-enable */
 
 class Node {
     constructor(value, prev) {
@@ -25,7 +28,7 @@ class Node {
         }
     }
 
-    *[Symbol.iterator]() {
+    * [Symbol.iterator]() {
         let current = this;
         while (current) {
             yield current.value;
@@ -48,18 +51,19 @@ class Node {
 
     static attach(node, next) {
         const prev = next.prev || null;
+
         if (prev) {
             prev.next = node;
         }
-        if (next) {
-            next.prev = node;
-        }
+
+        next.prev = node;
         node.next = next;
         node.prev = prev;
     }
 }
-
+/* eslint-disable */
 const [n, m] = gets().split(' ').map(Number);
+/* eslint-enable */
 const numbers = {};
 const arr = gets().split(' ');
 arr.forEach((name, index) => {
@@ -73,7 +77,10 @@ for (let i = 0; i < m; i += 1) {
         .map((name) => numbers[name]);
     const element = arr[first];
     const next = arr[second];
-    if (!element.prev && next !== element.next) {
+    if (next === element.next) {
+        continue;
+    }
+    if (!element.prev) {
         left = element.next;
     } else if (!next.prev) {
         left = element;

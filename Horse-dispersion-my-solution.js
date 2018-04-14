@@ -16,12 +16,6 @@ const gets = this.gets || getGets(test);
 const print = this.print || console.log;
 /* eslint-enable */
 
-class ListNode {
-    constructor(value, next = null) {
-        this.value = value;
-        this.next = next;
-    }
-}
 class Queue {
     constructor() {
         this._first = null;
@@ -30,7 +24,11 @@ class Queue {
     }
 
     queue(element) {
-        const newNode = new ListNode(element);
+        // const newNode = new ListNode(element);
+        const newNode = {
+            value: element,
+            next: null,
+        };
         if (this._first === null) {
             this._first = newNode;
             this._last = newNode;
@@ -64,7 +62,9 @@ const startR = +gets();
 const startC = +gets();
 
 const matrix = [];
-matrix[startR] = {};
+for (let i = 0; i < n; i += 1) {
+    matrix[i] = {};
+}
 matrix[startR][startC] = 1;
 
 const colMovements = [1, 2, 1, 2];
@@ -73,25 +73,20 @@ const rowMovements = [-2, -1, 2, 1];
 const checkAllHorseMoves = (r, c, turnNumber) => {
     for (let i = 0; i < rowMovements.length; i += 1) {
         const newR = r + rowMovements[i];
-        if (!matrix[newR]) {
-            matrix[newR] = {};
-        }
-        let newC;
-        if (c > colToPrint) {
-            newC = c - colMovements[i];
-        } else {
-            newC = c + colMovements[i];
-        }
+        const newC =
+            (c > colToPrint) ? c - colMovements[i] : c + colMovements[i];
 
         if (newR >= 0 && newR < n &&
             newC >= 0 && newC < m &&
             !matrix[newR][newC]) {
             const newTurnNumber = turnNumber + 1;
+
             matrix[newR][newC] = newTurnNumber;
+
             queue.queue([newR, newC, newTurnNumber]);
 
             if (newC === colToPrint) {
-                toPrint[newR] = newTurnNumber;
+                // toPrint[newR] = newTurnNumber;
                 used -= 1;
                 if (used === 0) {
                     return true;
@@ -107,7 +102,7 @@ queue.queue([startR, startC, 1]);
 const colToPrint = Math.floor(m / 2);
 
 let used = n;
-const toPrint = [];
+// const toPrint = [];
 
 while (!queue.isEmpty()) {
     const newCell = queue.dequeue();
@@ -115,4 +110,7 @@ while (!queue.isEmpty()) {
         break;
     }
 }
-print(toPrint.join('\n'));
+// print(toPrint.join('\n'));
+for (let i = 0; i < n; i += 1) {
+    print(matrix[i][colToPrint]);
+}

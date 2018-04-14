@@ -25,12 +25,12 @@ const distance = (x, y) => {
     // axes symmetry
     x = Math.abs(x);
     y = Math.abs(y);
+
     // diagonal symmetry
     if (x < y) {
-        const t = x;
-        x = y;
-        y = t;
+        [x, y] = [y, x];
     }
+
     // 2 corner cases
     if (x === 1 && y === 0) {
         return 3;
