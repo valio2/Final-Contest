@@ -1,3 +1,4 @@
+/* globals Set */
 const getGets = (arr) => {
     let index = 0;
     return () => {
@@ -20,14 +21,8 @@ const print = this.print || console.log;
 const [r, c] = gets().split(' ').map(Number);
 
 const matrix = [];
-for (let i = r - 1; i >= 0; i -= 1) {
-    const row = Array.from({
-        length: c,
-    });
-    row.forEach((_, index) => {
-        row[index] = ((r - 1 - matrix.length) * 3) + (index * 3);
-    });
-    matrix.push(row);
+for (let i = 0; i < r; i += 1) {
+    matrix.push(new Set());
 }
 
 const moveInDirection = (row, col, moveRow, moveCol, times) => {
@@ -40,8 +35,10 @@ const moveInDirection = (row, col, moveRow, moveCol, times) => {
             startCol = col - moveCol;
             return;
         }
-        maxSum += matrix[row][col];
-        matrix[row][col] = 0;
+        if (!matrix[row].has(col)) {
+            matrix[row].add(col);
+            maxSum += (r - row - 1) * 3 + col * 3;
+        }
     }
     startRow = row;
     startCol = col;

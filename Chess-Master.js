@@ -55,33 +55,6 @@ const moveInDirection = (row, col, moveRow, moveCol, endRow, endCol) => {
     }
     return false;
 };
-const checkQueenMovement = (R, C, endR, endC) => {
-    if (R < endR && C === endC) {
-        return moveInDirection(R, C, 1, 0, endR, endC);
-    }
-    if (R < endR && C > endC) {
-        return moveInDirection(R, C, 1, -1, endR, endC);
-    }
-    if (R < endR && C < endC) {
-        return moveInDirection(R, C, 1, 1, endR, endC);
-    }
-    if (R > endR && C > endC) {
-        return moveInDirection(R, C, -1, -1, endR, endC);
-    }
-    if (R > endR && C === endC) {
-        return moveInDirection(R, C, -1, 0, endR, endC);
-    }
-    if (R > endR && C < endC) {
-        return moveInDirection(R, C, -1, 1, endR, endC);
-    }
-    if (R === endR && C > endC) {
-        return moveInDirection(R, C, 0, -1, endR, endC);
-    }
-    if (R === endR && C < endC) {
-        return moveInDirection(R, C, 0, 1, endR, endC);
-    }
-    return false;
-};
 const checkBishopMovement = (R, C, endR, endC) => {
     if (R === endR || C === endC) {
         return false;
@@ -115,7 +88,10 @@ const checkRookMovement = (R, C, endR, endC) => {
 const findMove = (R, C, endR, endC) => {
     const piece = matrix[R][C];
     if (piece === 'Q') {
-        return checkQueenMovement(R, C, endR, endC);
+        if (checkRookMovement(R, C, endR, endC)) {
+            return true;
+        }
+        return checkBishopMovement(R, C, endR, endC);
     }
     if (piece === 'B') {
         return checkBishopMovement(R, C, endR, endC);

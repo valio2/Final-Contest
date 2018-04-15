@@ -1,4 +1,4 @@
-/* globals Symbol*/
+/* globals Symbol Map*/
 /* eslint-disable */
 const getGets = (arr) => {
     let index = 0;
@@ -64,17 +64,17 @@ class Node {
 /* eslint-disable */
 const [n, m] = gets().split(' ').map(Number);
 /* eslint-enable */
-const numbers = {};
+const numbers = new Map();
 const arr = gets().split(' ');
 arr.forEach((name, index) => {
     arr[index] = new Node(name, arr[index - 1]);
-    numbers[name] = index;
+    numbers.set(name, index);
 });
 let left = arr[0];
 for (let i = 0; i < m; i += 1) {
     const [first, second] = gets()
         .split(' ')
-        .map((name) => numbers[name]);
+        .map((name) => numbers.get(name));
     const element = arr[first];
     const next = arr[second];
     if (next === element.next) {
