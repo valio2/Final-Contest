@@ -28,7 +28,7 @@ class Node {
         }
     }
 
-    * [Symbol.iterator]() {
+    *[Symbol.iterator]() {
         let current = this;
         while (current) {
             yield current.value;
@@ -50,15 +50,25 @@ class Node {
     }
 
     static attach(node, next) {
-        const prev = next.prev || null;
+        // const prev = next.prev || null;
 
-        if (prev) {
-            prev.next = node;
+        // if (prev) {
+        //     prev.next = node;
+        // }
+
+        // next.prev = node;
+        // node.next = next;
+        // node.prev = prev;
+        if (next.prev) {
+            node.next = next;
+            node.prev = next.prev;
+            node.prev.next = node;
+            node.next.prev = node;
+        } else {
+            node.next = next;
+            node.next.prev = node;
+            node.prev = null;
         }
-
-        next.prev = node;
-        node.next = next;
-        node.prev = prev;
     }
 }
 /* eslint-disable */

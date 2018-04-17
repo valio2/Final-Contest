@@ -51,7 +51,8 @@ const wantedCol = Math.floor(m / 2);
 const arr = [];
 
 for (let i = 0; i < n; i += 1) {
-    arr.push(distance(startR - i, wantedCol - startC) + 1);
+    // arr.push(distance(startR - i, wantedCol - startC) + 1);
+    arr[i] = distance(startR - i, wantedCol - startC) + 1;
 }
 
 print(arr.join('\n'));
